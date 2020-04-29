@@ -28,11 +28,27 @@
         // Create SQL Command
         SqlCommand cmdInsert = new SqlCommand(strInsert, conn);
 
-        conn.Open();
+        try
+        {
+            conn.Open();
+            cmdInsert.ExecuteNonQuery();
+            conn.Close();
+            lblM.Text = "Welcome " + fnamet.Text + " Your Account Has Been Successfully Created!!";
+        }
 
-        cmdInsert.ExecuteNonQuery();
 
-        conn.Close();
+        catch (SqlException err)
+        {
+            if (err.Number == 2627)
+                lblM.Text = "Username already exists, Please Choose Another!!";
+            else
+                lblM.Text = "Sorry, Database Error, You may Try later!!";
+        }
+
+        catch
+        {
+            lblM.Text = "Sorry, System Error, You may Try later!!";
+        }
     }
 </script>
 
@@ -321,8 +337,12 @@
                 <td class="auto-style9">
                     <asp:Button ID="Button1" runat="server" Text="Button" OnClick="Button1_Click"/>
                 </td>
-                <td class="auto-style2">&nbsp;</td>
-                <td class="auto-style7">&nbsp;</td>
+                <td class="auto-style2">
+                    <asp:Label ID="lblM" runat="server"></asp:Label>
+                </td>
+                <td class="auto-style7">
+                    <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/signin.aspx">go to sign in</asp:HyperLink>
+                </td>
                 <td class="auto-style3">&nbsp;</td>
                 <td>&nbsp;</td>
             </tr>
